@@ -23,7 +23,7 @@ class Window(QWidget):
 
     def enter_func(self):
         self.text.setText("You clicked Enter")
-        self.text.resize(150, 20)
+        self.text.resize(150, 20) # resize the label so that you can fit wider text
 
     def exit_func(self):
         self.text.setText("You clicked Exit")
