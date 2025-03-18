@@ -1,7 +1,4 @@
-import sys
-from operator import truediv
-
-from PyQt5.QtCore import qQNaN
+import sysxs
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont  # This is how you can use fonts
 

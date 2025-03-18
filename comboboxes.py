@@ -1,6 +1,4 @@
 import sys
-
-from PyQt5.QtCore import qQNaN
 from PyQt5.QtWidgets import *
 
 class Window(QWidget):
