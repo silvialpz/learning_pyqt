@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont, QPixmap
+from PyQt5.QtCore import QTimer
 
 txt_font = QFont("Times New Roman", 25)
 btn_font = QFont("Arial", 12)
@@ -35,7 +36,30 @@ class Window(QWidget):
         self.image_game.setPixmap(QPixmap("images/game.png"))
         self.image_game.move(230, 100)
 
+        ####################### Buttons #######################
+        btn_start = QPushButton("Start", self)
+        btn_start.setFont(btn_font)
+        btn_start.move(180, 250)
+
+        btn_stop = QPushButton("Stop", self)
+        btn_stop.setFont(btn_font)
+        btn_stop.move(270, 250)
+
+        ####################### Timer #######################
+        self.timer = QTimer(self)
+        self.timer.setInterval(1000)  # milliseconds, aka 1 second
+        self.timer.timeout.connect(self.playGame)
+
         self.show()
+
+    def playGame(self):
+        pass
+
+    def start(self):
+        self.timer.start()
+
+    def stop(self):
+        self.timer.stop()
 
 def main():
     App = QApplication(sys.argv)
