@@ -6,6 +6,8 @@ from random import randint
 
 txt_font = QFont("Times New Roman", 25)
 btn_font = QFont("Arial", 12)
+score_computer = 0
+score_player = 0
 
 class Window(QWidget):
     def __init__(self):
@@ -16,11 +18,11 @@ class Window(QWidget):
 
     def UI(self):
         ####################### Scores #######################
-        self.score_computer_txt = QLabel("Computer Score:", self)
+        self.score_computer_txt = QLabel("Computer Score:  ", self)
         self.score_computer_txt.move(30, 20)
         self.score_computer_txt.setFont(txt_font)
 
-        self.score_player_txt = QLabel("Your Score:", self)
+        self.score_player_txt = QLabel("Your Score:  ", self)
         self.score_player_txt.move(330, 20)
         self.score_player_txt.setFont(txt_font)
 
@@ -76,7 +78,43 @@ class Window(QWidget):
         self.timer.start()
 
     def stop(self):
+        global score_computer  # Using global to be able to change value from local scope
+        global score_player
+
         self.timer.stop()
+
+        if self.rnd_computer == self.rnd_player:
+            mbox = QMessageBox.information(self, "Information", "Draw Game")
+        elif self.rnd_computer == 1 and self.rnd_player == 2:  # rock v. paper
+            mbox = QMessageBox.information(self, "Information", "You Win!")
+            score_player += 1
+            self.score_player_txt.setText("Your Score:" + str(score_player))
+        elif self.rnd_computer == 1 and self.rnd_player == 3:  # rock v. scissor
+            mbox = QMessageBox.information(self, "Information", "Computer Wins")
+            score_computer += 1
+            self.score_computer_txt.setText("Computer Score:" + str(score_computer))
+        elif self.rnd_computer == 2 and self.rnd_player == 1:  # paper v. rock
+            mbox = QMessageBox.information(self, "Information", "Computer Wins")
+            score_computer += 1
+            self.score_computer_txt.setText("Computer Score:" + str(score_computer))
+        elif self.rnd_computer == 2 and self.rnd_player == 3:  # paper v. scissors
+            mbox = QMessageBox.information(self, "Information", "You Win!")
+            score_player += 1
+            self.score_player_txt.setText("Your Score:" + str(score_player))
+        elif self.rnd_computer == 3 and self.rnd_player == 1:  # scissors v. rock
+            mbox = QMessageBox.information(self, "Information", "You Win!")
+            score_player += 1
+            self.score_player_txt.setText("Your Score:" + str(score_player))
+        elif self.rnd_computer == 3 and self.rnd_player == 2:  # scissors v. paper
+            mbox = QMessageBox.information(self, "Information", "Computer Wins")
+            score_computer += 1
+            self.score_computer_txt.setText("Computer Score:" + str(score_computer))
+
+
+        if score_computer == 3 or score_player == 3:
+            mbox = QMessageBox(self, "Information", "Game Over")
+            sys.exit()
+
 
 def main():
     App = QApplication(sys.argv)
