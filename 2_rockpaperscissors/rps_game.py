@@ -112,7 +112,7 @@ class Window(QWidget):
 
 
         if score_computer == 3 or score_player == 3:
-            mbox = QMessageBox(self, "Information", "Game Over")
+            mbox = QMessageBox.information(self, "Information", "Game Over")
             sys.exit()
 
 
