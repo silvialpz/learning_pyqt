@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtCore import QTimer
+from random import randint
 
 txt_font = QFont("Times New Roman", 25)
 btn_font = QFont("Arial", 12)
@@ -40,20 +41,36 @@ class Window(QWidget):
         btn_start = QPushButton("Start", self)
         btn_start.setFont(btn_font)
         btn_start.move(180, 250)
+        btn_start.clicked.connect(self.start)
 
         btn_stop = QPushButton("Stop", self)
         btn_stop.setFont(btn_font)
         btn_stop.move(270, 250)
+        btn_stop.clicked.connect(self.stop)
 
         ####################### Timer #######################
         self.timer = QTimer(self)
-        self.timer.setInterval(1000)  # milliseconds, aka 1 second
+        self.timer.setInterval(100)  # milliseconds
         self.timer.timeout.connect(self.playGame)
 
         self.show()
 
     def playGame(self):
-        pass
+        self.rnd_computer = randint(1, 3)
+        if self.rnd_computer == 1:
+            self.image_computer.setPixmap(QPixmap("images/rock.png"))
+        elif self.rnd_computer == 2:
+            self.image_computer.setPixmap(QPixmap("images/paper.png"))
+        else:
+            self.image_computer.setPixmap(QPixmap("images/scissors.png"))
+
+        self.rnd_player = randint(1, 3)
+        if self.rnd_player == 1:
+            self.image_player.setPixmap(QPixmap("images/rock.png"))
+        elif self.rnd_player == 2:
+            self.image_player.setPixmap(QPixmap("images/paper.png"))
+        else:
+            self.image_player.setPixmap(QPixmap("images/scissors.png"))
 
     def start(self):
         self.timer.start()
