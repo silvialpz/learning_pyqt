@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from matplotlib.fontconfig_pattern import value_escape
 
 
 class Window(QWidget):
