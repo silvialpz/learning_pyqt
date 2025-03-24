@@ -5,7 +5,7 @@ class Window(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(350, 150, 400, 400)
-        self.setWindowTitle("Vertical Box Layout")
+        self.setWindowTitle("Grid Layout")
         self.UI()
 
     def UI(self):
