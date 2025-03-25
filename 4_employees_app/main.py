@@ -14,21 +14,33 @@ class Main(QWidget):
         self.layouts()
 
     def mainDesign(self):
-        pass
+        self.employee_list = QListWidget()
+        self.btn_new = QPushButton("New")
+        self.btn_edit = QPushButton("Edit")
+        self.btn_del = QPushButton("Delete")
 
     def layouts(self):
+        ####################### Layouts #######################
         self.main_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_main_layout = QVBoxLayout()
         self.right_top_layout = QHBoxLayout()
         self.right_bottom_layout = QHBoxLayout()
 
+        ####################### Adding Layouts #######################
         self.right_main_layout.addLayout(self.right_top_layout)
         self.right_main_layout.addLayout(self.right_bottom_layout)
 
-        self.main_layout.addLayout(self.left_layout)
-        self.main_layout.addLayout(self.right_main_layout)
+        self.main_layout.addLayout(self.left_layout, 40)  # using aspect ratio for layout
+        self.main_layout.addLayout(self.right_main_layout, 60)
 
+        ####################### Adding Widgets #######################
+        self.right_top_layout.addWidget(self.employee_list)
+        self.right_bottom_layout.addWidget(self.btn_new)
+        self.right_bottom_layout.addWidget(self.btn_edit)
+        self.right_bottom_layout.addWidget(self.btn_del)
+
+        ####################### Main Window Layout #######################
         self.setLayout(self.main_layout)
 
 
