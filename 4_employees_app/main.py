@@ -11,9 +11,26 @@ class Main(QWidget):
 
     def UI(self):
         self.mainDesign()
+        self.layouts()
 
     def mainDesign(self):
         pass
+
+    def layouts(self):
+        self.main_layout = QHBoxLayout()
+        self.left_layout = QVBoxLayout()
+        self.right_main_layout = QVBoxLayout()
+        self.right_top_layout = QHBoxLayout()
+        self.right_bottom_layout = QHBoxLayout()
+
+        self.right_main_layout.addLayout(self.right_top_layout)
+        self.right_main_layout.addLayout(self.right_bottom_layout)
+
+        self.main_layout.addLayout(self.left_layout)
+        self.main_layout.addLayout(self.right_main_layout)
+
+        self.setLayout(self.main_layout)
+
 
 def main():
     app = QApplication(sys.argv)
