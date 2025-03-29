@@ -20,6 +20,7 @@ class Main(QWidget):
     def mainDesign(self):
         self.employee_list = QListWidget()
         self.btn_new = QPushButton("New")
+        self.btn_new.clicked.connect(self.addEmployee)
         self.btn_edit = QPushButton("Edit")
         self.btn_del = QPushButton("Delete")
 
@@ -47,6 +48,20 @@ class Main(QWidget):
         ####################### Main Window Layout #######################
         self.setLayout(self.main_layout)
 
+    def addEmployee(self):
+        self.newEmployee = AddEmployee()
+        self.close()
+
+class AddEmployee(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Add Employees")
+        self.setGeometry(450, 150, 350, 600)
+        self.UI()
+        self.show()
+
+    def UI(self):
+        pass
 
 def main():
     app = QApplication(sys.argv)
