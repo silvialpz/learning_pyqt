@@ -65,33 +65,36 @@ class AddEmployee(QWidget):
         self.layouts()
 
     def mainDesign(self):
+        self.setStyleSheet("background-color: white; font-size: 14pt; font-family: Times New Roman;")
         ##################### Top Layout Widgets ######################
         self.title = QLabel("Add Person")
-        self.title.setStyleSheet("font-size: 24pt; font-family: Arial; font-weight: bold;")
+        self.title.setStyleSheet("font-size: 24pt; font-family: Arial; font-weight: bold;")  # The style sheet set for the title has preference over the ones set for the window
         self.img_add = QLabel()
         self.img_add.setPixmap(QPixmap('icons/person.png'))
         ##################### Bottom Layout Widgets ######################
         self.name_lbl = QLabel("Name: ")
         self.name_entry = QLineEdit()
-        self.name_entry.setMinimumWidth(200)
+        self.name_entry.setMinimumWidth(210)
         self.name_entry.setPlaceholderText("Enter Employee Name")
         self.surname_lbl = QLabel("Surname: ")
         self.surname_entry = QLineEdit()
-        self.surname_entry.setMinimumWidth(200)
+        self.surname_entry.setMinimumWidth(210)
         self.surname_entry.setPlaceholderText("Enter Employee Surname")
         self.phone_lbl = QLabel("Phone: ")
         self.phone_entry = QLineEdit()
-        self.phone_entry.setMinimumWidth(200)
+        self.phone_entry.setMinimumWidth(210)
         self.phone_entry.setPlaceholderText("Enter Employee Phone Number")
         self.email_lbl = QLabel("Email: ")
         self.email_entry = QLineEdit()
-        self.email_entry.setMinimumWidth(200)
+        self.email_entry.setMinimumWidth(210)
         self.email_entry.setPlaceholderText("Enter Employee Email")
         self.img_lbl = QLabel("Picture: ")
         self.img_btn = QPushButton("Browse")
+        self.img_btn.setStyleSheet("background-color: orange;")
         self.addr_lbl = QLabel("Address: ")
         self.addr_editor = QTextEdit()
         self.add_btn = QPushButton("Add")
+        self.add_btn.setStyleSheet("background-color: orange;")
 
     def layouts(self):
         ####################### Main Layouts #######################
