@@ -57,6 +57,7 @@ class AddEmployee(QWidget):
         self.setWindowTitle("Add Employees")
         self.setGeometry(450, 150, 350, 600)
         self.UI()
+        self.setFocus()
         self.show()
 
     def UI(self):
@@ -64,11 +65,33 @@ class AddEmployee(QWidget):
         self.layouts()
 
     def mainDesign(self):
+        ##################### Top Layout Widgets ######################
         self.title = QLabel("Add Person")
         self.title.setStyleSheet("font-size: 24pt; font-family: Arial; font-weight: bold;")
         self.img_add = QLabel()
         self.img_add.setPixmap(QPixmap('icons/person.png'))
-
+        ##################### Bottom Layout Widgets ######################
+        self.name_lbl = QLabel("Name: ")
+        self.name_entry = QLineEdit()
+        self.name_entry.setMinimumWidth(200)
+        self.name_entry.setPlaceholderText("Enter Employee Name")
+        self.surname_lbl = QLabel("Surname: ")
+        self.surname_entry = QLineEdit()
+        self.surname_entry.setMinimumWidth(200)
+        self.surname_entry.setPlaceholderText("Enter Employee Surname")
+        self.phone_lbl = QLabel("Phone: ")
+        self.phone_entry = QLineEdit()
+        self.phone_entry.setMinimumWidth(200)
+        self.phone_entry.setPlaceholderText("Enter Employee Phone Number")
+        self.email_lbl = QLabel("Email: ")
+        self.email_entry = QLineEdit()
+        self.email_entry.setMinimumWidth(200)
+        self.email_entry.setPlaceholderText("Enter Employee Email")
+        self.img_lbl = QLabel("Picture: ")
+        self.img_btn = QPushButton("Browse")
+        self.addr_lbl = QLabel("Address: ")
+        self.addr_editor = QTextEdit()
+        self.add_btn = QPushButton("Add")
 
     def layouts(self):
         ####################### Main Layouts #######################
@@ -78,11 +101,20 @@ class AddEmployee(QWidget):
         ####################### Adding Layouts #######################
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addLayout(self.bottom_layout)
-
+        ####################### Adding Widgets to Top Layout #######################
         self.top_layout.addStretch()
         self.top_layout.addWidget(self.title)
         self.top_layout.addWidget(self.img_add)
         self.top_layout.addStretch()
+        self.top_layout.setContentsMargins(110, 20, 10, 30)  # left, top, right, bottom
+        ####################### Adding Widgets to Bottom Layout #######################
+        self.bottom_layout.addRow(self.name_lbl, self.name_entry)
+        self.bottom_layout.addRow(self.surname_lbl, self.surname_entry)
+        self.bottom_layout.addRow(self.phone_lbl, self.phone_entry)
+        self.bottom_layout.addRow(self.email_lbl, self.email_entry)
+        self.bottom_layout.addRow(self.img_lbl, self.img_btn)
+        self.bottom_layout.addRow(self.addr_lbl, self.addr_editor)
+        self.bottom_layout.addRow("", self.add_btn)
         ####################### Main Window Layout #######################
         self.setLayout(self.main_layout)
 
