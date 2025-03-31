@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QPixmap, QFont
 import sqlite3
 import sys
 
@@ -63,7 +64,11 @@ class AddEmployee(QWidget):
         self.layouts()
 
     def mainDesign(self):
-        pass
+        self.title = QLabel("Add Person")
+        self.title.setStyleSheet("font-size: 24pt; font-family: Arial; font-weight: bold;")
+        self.img_add = QLabel()
+        self.img_add.setPixmap(QPixmap('icons/person.png'))
+
 
     def layouts(self):
         ####################### Main Layouts #######################
@@ -74,6 +79,11 @@ class AddEmployee(QWidget):
         self.main_layout.addLayout(self.top_layout)
         self.main_layout.addLayout(self.bottom_layout)
 
+        self.top_layout.addStretch()
+        self.top_layout.addWidget(self.title)
+        self.top_layout.addWidget(self.img_add)
+        self.top_layout.addStretch()
+        ####################### Main Window Layout #######################
         self.setLayout(self.main_layout)
 
 def main():
