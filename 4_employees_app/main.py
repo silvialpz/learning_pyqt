@@ -1,10 +1,13 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QFont
 import sqlite3
-import sys
+import sys, os
+from PIL import Image
 
 connection = sqlite3.connect('employees.db')
 cursor = connection.cursor()
+default_img = 'person.png'
+
 
 class Main(QWidget):
     def __init__(self):
@@ -91,6 +94,7 @@ class AddEmployee(QWidget):
         self.img_lbl = QLabel("Picture: ")
         self.img_btn = QPushButton("Browse")
         self.img_btn.setStyleSheet("background-color: orange;")
+        self.img_btn.clicked.connect(self.uploadImage)
         self.addr_lbl = QLabel("Address: ")
         self.addr_editor = QTextEdit()
         self.add_btn = QPushButton("Add")
@@ -120,6 +124,17 @@ class AddEmployee(QWidget):
         self.bottom_layout.addRow("", self.add_btn)
         ####################### Main Window Layout #######################
         self.setLayout(self.main_layout)
+
+    def uploadImage(self):
+        global default_img
+        size = (128, 128)
+        self.file_name, ok = QFileDialog.getOpenFileName(self, "Upload image", '', 'Image Files (*.jpg *.png)')
+
+        if ok:
+            default_img = os.path.basename(self.file_name)
+            img = Image.open(self.file_name)
+            img = img.resize(size)
+            img.save("images/{}".format(default_img))
 
 def main():
     app = QApplication(sys.argv)
