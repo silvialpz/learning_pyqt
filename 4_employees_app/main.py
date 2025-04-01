@@ -69,6 +69,9 @@ class AddEmployee(QWidget):
         self.mainDesign()
         self.layouts()
 
+    def closeEvent(self, event):
+        self.main = Main()  # you create another instance of the Main window to go back to
+
     def mainDesign(self):
         self.setStyleSheet("background-color: white; font-size: 14pt; font-family: Times New Roman;")
         ##################### Top Layout Widgets ######################
@@ -155,6 +158,8 @@ class AddEmployee(QWidget):
                 cursor.execute(query, (name, surname, phone, email, img, address))
                 connection.commit()  # Use commit each time you update database
                 QMessageBox.information(self, "Success", "Employee has been added to database")
+                self.close()
+                self.main = Main()
             except:
                 QMessageBox.information(self, "Warning", "Employee has NOT been added to database")
         else:
