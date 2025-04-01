@@ -1,3 +1,5 @@
+from multiprocessing.connection import address_type
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QFont
 import sqlite3
@@ -99,6 +101,7 @@ class AddEmployee(QWidget):
         self.addr_editor = QTextEdit()
         self.add_btn = QPushButton("Add")
         self.add_btn.setStyleSheet("background-color: orange;")
+        self.add_btn.clicked.connect(self.addEmployee)
 
     def layouts(self):
         ####################### Main Layouts #######################
@@ -135,6 +138,27 @@ class AddEmployee(QWidget):
             img = Image.open(self.file_name)
             img = img.resize(size)
             img.save("images/{}".format(default_img))
+
+    def addEmployee(self):
+        global default_img
+        name = self.name_entry.text()
+        surname = self.surname_entry.text()
+        phone = self.phone_entry.text()
+        email = self.email_entry.text()
+        img = default_img
+        address = self.addr_editor.toPlainText()
+
+        if (name and surname and phone and email != ""):
+            # to add record to database, use try-except blocks
+            try:
+                query = "INSERT INTO employees (name, surname, phone, email, img, address) VALUES(?, ?, ?, ?, ?, ?)"
+                cursor.execute(query, (name, surname, phone, email, img, address))
+                connection.commit()  # Use commit each time you update database
+                QMessageBox.information(self, "Success", "Employee has been added to database")
+            except:
+                QMessageBox.information(self, "Warning", "Employee has NOT been added to database")
+        else:
+            QMessageBox.information(self, "Warning", "Fields cannot be empty")
 
 def main():
     app = QApplication(sys.argv)
