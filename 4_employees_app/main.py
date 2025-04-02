@@ -30,6 +30,7 @@ class Main(QWidget):
         self.btn_new = QPushButton("New")
         self.btn_new.clicked.connect(self.addEmployee)
         self.btn_edit = QPushButton("Edit")
+        self.btn_edit.clicked.connect(self.editEmployee)
         self.btn_del = QPushButton("Delete")
         self.btn_del.clicked.connect(self.deleteEmployee)
 
@@ -124,8 +125,7 @@ class Main(QWidget):
         self.left_layout.addRow("Address: ", address)
 
     def deleteEmployee(self):
-        # Check employee is selected
-        if self.employee_list.selectedItems():
+        if self.employee_list.selectedItems():  # Check employee is selected
             person = self.employee_list.currentItem().text()
             id_number, name = person.split(" - ")
 
@@ -144,11 +144,21 @@ class Main(QWidget):
         else:
             QMessageBox.information(self, "Info", "Please select a person to delete")
 
+    def editEmployee(self):
+        if self.employee_list.selectedItems():
+            person = self.employee_list.currentItem().text()
+            id_number, name = person.split(" - ")
+            self.updateWindow = UpdateEmployee()
+            self.close()
+        else:
+            QMessageBox.information(self, "Info", "Please select a person to update")
+
+
 # make a class for each window
 class AddEmployee(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Add Employees")
+        self.setWindowTitle("Add Employee")
         self.setGeometry(450, 150, 350, 600)
         self.UI()
         self.setFocus()
@@ -253,6 +263,19 @@ class AddEmployee(QWidget):
                 QMessageBox.information(self, "Warning", "Employee has NOT been added to database")
         else:
             QMessageBox.information(self, "Warning", "Fields cannot be empty")
+
+class UpdateEmployee(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Edit Employee")
+        self.setGeometry(450, 150, 350, 600)
+        self.UI()
+        self.setFocus()
+        self.show()
+
+    def UI(self):
+        pass
+
 
 def main():
     app = QApplication(sys.argv)
