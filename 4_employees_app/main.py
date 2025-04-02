@@ -124,22 +124,25 @@ class Main(QWidget):
         self.left_layout.addRow("Address: ", address)
 
     def deleteEmployee(self):
-        person = self.employee_list.currentItem().text()
-        id_number, name = person.split(" - ")
+        # Check employee is selected
+        if self.employee_list.selectedItems():
+            person = self.employee_list.currentItem().text()
+            id_number, name = person.split(" - ")
 
-        mbox = QMessageBox.question(self, "Warning", "Do you want to delete this person?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            mbox = QMessageBox.question(self, "Warning", "Do you want to delete this person?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
-        if mbox == QMessageBox.Yes:
-            try:
-                query = "DELETE FROM employees WHERE id=?"
-                cursor.execute(query, (id_number, ))
-                connection.commit()
-                QMessageBox.information(self, "Info", "Employee has been deleted")
-                self.close()
-                self.main = Main()
-            except:
-                QMessageBox.information(self, "Warning!", "Employee has not been deleted")
-
+            if mbox == QMessageBox.Yes:
+                try:
+                    query = "DELETE FROM employees WHERE id=?"
+                    cursor.execute(query, (id_number, ))
+                    connection.commit()
+                    QMessageBox.information(self, "Info", "Employee has been deleted")
+                    self.close()
+                    self.main = Main()
+                except:
+                    QMessageBox.information(self, "Warning!", "Employee has not been deleted")
+        else:
+            QMessageBox.information(self, "Info", "Please select a person to delete")
 
 # make a class for each window
 class AddEmployee(QWidget):
