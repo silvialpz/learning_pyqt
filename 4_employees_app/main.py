@@ -31,6 +31,7 @@ class Main(QWidget):
         self.btn_new.clicked.connect(self.addEmployee)
         self.btn_edit = QPushButton("Edit")
         self.btn_del = QPushButton("Delete")
+        self.btn_del.clicked.connect(self.deleteEmployee)
 
     def layouts(self):
         ####################### Layouts #######################
@@ -66,6 +67,12 @@ class Main(QWidget):
             self.employee_list.addItem("{} -  {} {}".format(number, name, surname))
 
     def displayFirstRecord(self):
+        # Check table is not empty
+        query = "SELECT COUNT(*) FROM employees"
+        count = cursor.execute(query).fetchone()
+        if count == (0, ):
+            return
+
         query = "SELECT * FROM employees ORDER BY ROWID ASC LIMIT 1"
         employee = cursor.execute(query).fetchone()
         number, name_text, surname_text, phone_text, email_text, img_addr, address_text = employee
@@ -115,6 +122,23 @@ class Main(QWidget):
         self.left_layout.addRow("Phone: ", phone)
         self.left_layout.addRow("Email: ", email)
         self.left_layout.addRow("Address: ", address)
+
+    def deleteEmployee(self):
+        person = self.employee_list.currentItem().text()
+        id_number, name = person.split(" - ")
+
+        mbox = QMessageBox.question(self, "Warning", "Do you want to delete this person?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if mbox == QMessageBox.Yes:
+            try:
+                query = "DELETE FROM employees WHERE id=?"
+                cursor.execute(query, (id_number, ))
+                connection.commit()
+                QMessageBox.information(self, "Info", "Employee has been deleted")
+                self.close()
+                self.main = Main()
+            except:
+                QMessageBox.information(self, "Warning!", "Employee has not been deleted")
 
 
 # make a class for each window
