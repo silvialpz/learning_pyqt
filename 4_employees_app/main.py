@@ -21,8 +21,10 @@ class Main(QWidget):
         self.mainDesign()
         self.layouts()
         self.getEmployees()
+        self.displayFirstRecord()
 
     def mainDesign(self):
+        self.setStyleSheet("font-size: 14pt; font-family: Arial; font-weight: bold;")
         self.employee_list = QListWidget()
         self.btn_new = QPushButton("New")
         self.btn_new.clicked.connect(self.addEmployee)
@@ -32,7 +34,7 @@ class Main(QWidget):
     def layouts(self):
         ####################### Layouts #######################
         self.main_layout = QHBoxLayout()
-        self.left_layout = QVBoxLayout()
+        self.left_layout = QFormLayout()
         self.right_main_layout = QVBoxLayout()
         self.right_top_layout = QHBoxLayout()
         self.right_bottom_layout = QHBoxLayout()
@@ -60,7 +62,29 @@ class Main(QWidget):
 
         for (number, name, surname) in employees:
             # Use employee number in order to be able to update records with ID
-            self.employee_list.addItem("{}-{} {}".format(number, name, surname))
+            self.employee_list.addItem("{} -  {} {}".format(number, name, surname))
+
+    def displayFirstRecord(self):
+        query = "SELECT * FROM employees ORDER BY ROWID ASC LIMIT 1"
+        employee = cursor.execute(query).fetchone()
+        number, name_text, surname_text, phone_text, email_text, img_addr, address_text = employee
+
+        img = QLabel()
+        print("image/{}".format(img_addr))
+        img.setPixmap(QPixmap("images/{}".format(img_addr)))
+        name = QLabel(name_text)
+        surname = QLabel(surname_text)
+        phone = QLabel(phone_text)
+        email = QLabel(email_text)
+        address = QLabel(address_text)
+
+        self.left_layout.setVerticalSpacing(20)
+        self.left_layout.addRow("", img)
+        self.left_layout.addRow("Name: ", name)
+        self.left_layout.addRow("Surname: ", surname)
+        self.left_layout.addRow("Phone: ", phone)
+        self.left_layout.addRow("Email: ", email)
+        self.left_layout.addRow("Address: ", address)
 
 # make a class for each window
 class AddEmployee(QWidget):
