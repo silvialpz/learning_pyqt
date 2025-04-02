@@ -26,6 +26,7 @@ class Main(QWidget):
     def mainDesign(self):
         self.setStyleSheet("font-size: 14pt; font-family: Arial; font-weight: bold;")
         self.employee_list = QListWidget()
+        self.employee_list.itemClicked.connect(self.singleClick)
         self.btn_new = QPushButton("New")
         self.btn_new.clicked.connect(self.addEmployee)
         self.btn_edit = QPushButton("Edit")
@@ -70,7 +71,6 @@ class Main(QWidget):
         number, name_text, surname_text, phone_text, email_text, img_addr, address_text = employee
 
         img = QLabel()
-        print("image/{}".format(img_addr))
         img.setPixmap(QPixmap("images/{}".format(img_addr)))
         name = QLabel(name_text)
         surname = QLabel(surname_text)
@@ -85,6 +85,37 @@ class Main(QWidget):
         self.left_layout.addRow("Phone: ", phone)
         self.left_layout.addRow("Email: ", email)
         self.left_layout.addRow("Address: ", address)
+
+    def singleClick(self):
+        # remove existing widgets in left panel
+        for i in reversed(range(self.left_layout.count())):
+            widget = self.left_layout.takeAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+
+        person = self.employee_list.currentItem().text()
+        id_number, name = person.split(" - ")
+        query = "SELECT * FROM employees WHERE id=?"
+        employee = cursor.execute(query, (id_number, )).fetchone()  # single item tuple
+
+        number, name_text, surname_text, phone_text, email_text, img_addr, address_text = employee
+
+        img = QLabel()
+        img.setPixmap(QPixmap("images/{}".format(img_addr)))
+        name = QLabel(name_text)
+        surname = QLabel(surname_text)
+        phone = QLabel(phone_text)
+        email = QLabel(email_text)
+        address = QLabel(address_text)
+
+        self.left_layout.setVerticalSpacing(20)
+        self.left_layout.addRow("", img)
+        self.left_layout.addRow("Name: ", name)
+        self.left_layout.addRow("Surname: ", surname)
+        self.left_layout.addRow("Phone: ", phone)
+        self.left_layout.addRow("Email: ", email)
+        self.left_layout.addRow("Address: ", address)
+
 
 # make a class for each window
 class AddEmployee(QWidget):
