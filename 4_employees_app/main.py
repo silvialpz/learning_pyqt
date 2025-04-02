@@ -1,5 +1,3 @@
-from multiprocessing.connection import address_type
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QFont
 import sqlite3
@@ -22,6 +20,7 @@ class Main(QWidget):
     def UI(self):
         self.mainDesign()
         self.layouts()
+        self.getEmployees()
 
     def mainDesign(self):
         self.employee_list = QListWidget()
@@ -54,6 +53,14 @@ class Main(QWidget):
     def addEmployee(self):
         self.newEmployee = AddEmployee()
         self.close()
+
+    def getEmployees(self):
+        query = "SELECT id, name, surname FROM employees"
+        employees = cursor.execute(query).fetchall()
+
+        for (number, name, surname) in employees:
+            # Use employee number in order to be able to update records with ID
+            self.employee_list.addItem("{}-{} {}".format(number, name, surname))
 
 # make a class for each window
 class AddEmployee(QWidget):
