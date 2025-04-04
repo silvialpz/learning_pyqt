@@ -283,7 +283,16 @@ class EditEmployee(QWidget):
         self.main = Main()  # you create another instance of the Main window to go back to
 
     def getPerson(self):
-        print(self.person_id)
+        query = "SELECT * FROM employees WHERE id=?"
+        person = cursor.execute(query, (self.person_id, )).fetchone()
+        number, name_text, surname_text, phone_text, email_text, img_addr, address_text = person
+
+        self.name_entry.setText(name_text)
+        self.surname_entry.setText(surname_text)
+        self.phone_entry.setText(phone_text)
+        self.email_entry.setText(email_text)
+        self.img_add.setPixmap(QPixmap("images/{}".format(img_addr)))
+        self.addr_editor.setText(address_text)
 
     def mainDesign(self):
         self.setStyleSheet("background-color: white; font-size: 14pt; font-family: Times New Roman; color: black;")
@@ -315,7 +324,7 @@ class EditEmployee(QWidget):
         self.img_btn.setStyleSheet("background-color: orange;")
         self.addr_lbl = QLabel("Address: ")
         self.addr_editor = QTextEdit()
-        self.add_btn = QPushButton("Edit")
+        self.add_btn = QPushButton("Update")
         self.add_btn.setStyleSheet("background-color: orange;")
 
     def layouts(self):
