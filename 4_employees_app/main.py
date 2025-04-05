@@ -322,10 +322,12 @@ class EditEmployee(QWidget):
         self.img_lbl = QLabel("Picture: ")
         self.img_btn = QPushButton("Browse")
         self.img_btn.setStyleSheet("background-color: orange;")
+        self.img_btn.clicked.connect(self.uploadImage)
         self.addr_lbl = QLabel("Address: ")
         self.addr_editor = QTextEdit()
         self.add_btn = QPushButton("Update")
         self.add_btn.setStyleSheet("background-color: orange;")
+        self.add_btn.clicked.connect(self.editEmployee)
 
     def layouts(self):
         ####################### Main Layouts #######################
@@ -351,6 +353,40 @@ class EditEmployee(QWidget):
         self.bottom_layout.addRow("", self.add_btn)
         ####################### Main Window Layout #######################
         self.setLayout(self.main_layout)
+
+    def uploadImage(self):
+        global default_img
+        size = (128, 128)
+        self.file_name, ok = QFileDialog.getOpenFileName(self, "Upload image", '', 'Image Files (*.jpg *.png)')
+
+        if ok:
+            default_img = os.path.basename(self.file_name)
+            img = Image.open(self.file_name)
+            img = img.resize(size)
+            img.save("images/{}".format(default_img))
+
+    def editEmployee(self):
+        global default_img
+        name = self.name_entry.text()
+        surname = self.surname_entry.text()
+        phone = self.phone_entry.text()
+        email = self.email_entry.text()
+        img = default_img
+        address = self.addr_editor.toPlainText()
+
+        if (name and surname and phone and email != ""):
+            # to add record to database, use try-except blocks
+            try:
+                query = "UPDATE employees set name=?, surname=?, phone=?, email=?, img=?, address=? WHERE id=?"
+                cursor.execute(query, (name, surname, phone, email, img, address, self.person_id))
+                connection.commit()  # Use commit each time you update database
+                QMessageBox.information(self, "Success", "Employee has been updated to database")
+                self.close()
+                self.main = Main()
+            except:
+                QMessageBox.information(self, "Warning", "Employee has NOT been updated to database")
+        else:
+            QMessageBox.information(self, "Warning", "Fields cannot be empty")
 
 
 def main():
