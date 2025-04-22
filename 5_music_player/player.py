@@ -16,6 +16,7 @@ class Player(QWidget):
         self.show()
 
         self.music_list = []
+        self.mute = False
 
     def UI(self):
         self.widgets()
@@ -57,6 +58,7 @@ class Player(QWidget):
         self.mute_button.setIcon(QIcon("icons/mute.png"))
         self.mute_button.setIconSize(QSize(24, 24))
         self.mute_button.setToolTip("Mute")
+        self.mute_button.clicked.connect(self.muteSound)
 
         ########################## Volume Slider #############################
         self.volume_slider = QSlider(Qt.Horizontal)
@@ -130,6 +132,16 @@ class Player(QWidget):
     def setVolume(self):
         volume = self.volume_slider.value()
         mixer.music.set_volume(volume/100)
+
+    def muteSound(self):
+        if not self.mute:
+            self.volume_slider.setValue(0)
+            self.mute = True
+            self.mute_button.setToolTip("Unmute")
+        else:
+            self.volume_slider.setValue(70)
+            self.mute = False
+            self.mute_button.setToolTip("Mute")
 
 
 def main():
