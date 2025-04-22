@@ -1,9 +1,11 @@
-import os.path
-import sys
+import os, sys
+import random
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
-import random
+from pygame import mixer
+
+mixer.init()
 
 class Player(QWidget):
     def __init__(self):
@@ -44,6 +46,7 @@ class Player(QWidget):
         self.play_button.setIcon(QIcon("icons/play.png"))
         self.play_button.setIconSize(QSize(64, 64))
         self.play_button.setToolTip("Play")
+        self.play_button.clicked.connect(self.playSound)
 
         self.next_button = QToolButton()
         self.next_button.setIcon(QIcon("icons/next.png"))
@@ -61,6 +64,7 @@ class Player(QWidget):
 
         ########################## Playlist #############################
         self.playlist = QListWidget()
+        self.playlist.doubleClicked(self.playSound)
 
     def layouts(self):
         ########################## Creating Layouts #############################
@@ -110,6 +114,14 @@ class Player(QWidget):
         for song in self.music_list:
             filename = os.path.basename(song)
             self.playlist.addItem(filename)
+
+    def playSound(self):
+        index = self.playlist.currentRow()
+        try:
+            mixer.music.load(self.music_list[index])
+            mixer.music.play()
+        except:
+            pass
 
 
 
