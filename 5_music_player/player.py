@@ -61,10 +61,14 @@ class Player(QWidget):
         ########################## Volume Slider #############################
         self.volume_slider = QSlider(Qt.Horizontal)
         self.volume_slider.setToolTip("Volume")
+        self.volume_slider.setValue(70)
+        self.volume_slider.setMinimum(0)
+        self.volume_slider.setMaximum(100)
+        self.volume_slider.valueChanged.connect(self.setVolume)
 
         ########################## Playlist #############################
         self.playlist = QListWidget()
-        self.playlist.doubleClicked(self.playSound)
+        self.playlist.doubleClicked.connect(self.playSound)
 
     def layouts(self):
         ########################## Creating Layouts #############################
@@ -123,6 +127,9 @@ class Player(QWidget):
         except:
             pass
 
+    def setVolume(self):
+        volume = self.volume_slider.value()
+        mixer.music.set_volume(volume/100)
 
 
 def main():
