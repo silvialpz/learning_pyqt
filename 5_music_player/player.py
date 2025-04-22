@@ -2,8 +2,9 @@ import os, sys
 import random
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QTimer
 from pygame import mixer
+from mutagen.mp3 import MP3
 
 mixer.init()
 
@@ -17,6 +18,8 @@ class Player(QWidget):
 
         self.music_list = []
         self.mute = False
+        self.count = 0
+        self.song_length = 0
 
     def UI(self):
         self.widgets()
@@ -72,6 +75,11 @@ class Player(QWidget):
         self.playlist = QListWidget()
         self.playlist.doubleClicked.connect(self.playSound)
 
+        ########################## Timer #############################
+        self.timer = QTimer()
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.updateProgressBar)
+
     def layouts(self):
         ########################## Creating Layouts #############################
         self.main_layout = QVBoxLayout()
@@ -124,8 +132,14 @@ class Player(QWidget):
     def playSound(self):
         index = self.playlist.currentRow()
         try:
+            self.count = 0
+            self.progress_bar.setValue(0)
             mixer.music.load(self.music_list[index])
             mixer.music.play()
+            self.timer.start()
+            sound = MP3(str(self.music_list[index]))
+            self.song_length = round(sound.info.length)
+            self.progress_bar.setMaximum(self.song_length)
         except:
             pass
 
@@ -142,6 +156,12 @@ class Player(QWidget):
             self.volume_slider.setValue(70)
             self.mute = False
             self.mute_button.setToolTip("Mute")
+
+    def updateProgressBar(self):
+        self.count += 1
+        self.progress_bar.setValue(self.count)
+        if self.count == self.song_length:
+            self.timer.stop()
 
 
 def main():
