@@ -12,6 +12,15 @@ class Player(QWidget):
     def UI(self):
         pass
 
+    def layout(self):
+        self.main_layout = QVBoxLayout()
+        self.top_main_layout = QVBoxLayout()
+        self.top_group_box = QGroupBox("Music Player", self)
+        self.top_layout = QHBoxLayout()
+        self.middle_layout = QHBoxLayout()
+        self.bottom_layout = QVBoxLayout()
+
+
 def main():
     App = QApplication(sys.argv)
     window = Player()
