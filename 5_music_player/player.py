@@ -1,13 +1,13 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
 
 class Player(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Music Player")
-        self.setGeometry(450, 150, 400, 700)
+        self.setGeometry(450, 150, 500, 700)
         self.UI()
         self.show()
 
@@ -49,6 +49,14 @@ class Player(QWidget):
         self.mute_button.setIconSize(QSize(24, 24))
         self.mute_button.setToolTip("Mute")
 
+        ########################## Volume Slider #############################
+        self.volume_slider = QSlider(Qt.Horizontal)
+        self.volume_slider.setToolTip("Volume")
+
+        ########################## Playlist #############################
+        self.playlist = QListWidget()
+
+
 
     def layouts(self):
         ########################## Creating Layouts #############################
@@ -71,15 +79,19 @@ class Player(QWidget):
         self.middle_layout.addWidget(self.previous_button)
         self.middle_layout.addWidget(self.play_button)
         self.middle_layout.addWidget(self.next_button)
+        self.middle_layout.addWidget(self.volume_slider)
         self.middle_layout.addWidget(self.mute_button)
         self.middle_layout.addStretch()
+
+        ######################### Bottom Layout Widgets ############################
+        self.bottom_layout.addWidget(self.playlist)
 
 
         self.top_main_layout.addLayout(self.top_layout)
         self.top_main_layout.addLayout(self.middle_layout)
         self.top_group_box.setLayout(self.top_main_layout)
-        self.main_layout.addWidget(self.top_group_box)
-        self.main_layout.addLayout(self.bottom_layout)
+        self.main_layout.addWidget(self.top_group_box, 25)
+        self.main_layout.addLayout(self.bottom_layout, 75)
         self.setLayout(self.main_layout)
 
 
