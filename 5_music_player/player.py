@@ -1,6 +1,7 @@
 import os, sys
 import random
 import time
+import style
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
@@ -9,6 +10,7 @@ from pygame import mixer
 from mutagen.mp3 import MP3
 
 mixer.init()
+
 
 class Player(QWidget):
     def __init__(self):
@@ -95,7 +97,7 @@ class Player(QWidget):
         self.main_layout = QVBoxLayout()
         self.top_main_layout = QVBoxLayout()
         self.top_group_box = QGroupBox("Music Player")  # Group box is a widget, not a layout
-        self.top_group_box.setStyleSheet("background-color: orange;")
+        self.top_group_box.setStyleSheet(style.group_box_style())
         self.top_layout = QHBoxLayout()
         self.middle_layout = QHBoxLayout()
         self.bottom_layout = QVBoxLayout()
