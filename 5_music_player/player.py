@@ -33,6 +33,7 @@ class Player(QWidget):
         ########################## Progress Bar #############################
         self.progress_bar = QProgressBar()
         self.progress_bar.setTextVisible(False)
+        self.progress_bar.setStyleSheet(style.progress_bar_style())
 
         ########################## Labels #############################
         self.song_timer_label = QLabel("00:00")
@@ -86,6 +87,7 @@ class Player(QWidget):
         ########################## Playlist #############################
         self.playlist = QListWidget()
         self.playlist.doubleClicked.connect(self.playSound)
+        self.playlist.setStyleSheet(style.list_widget_style())
 
         ########################## Timer #############################
         self.timer = QTimer()
