@@ -58,17 +58,43 @@ class Main(QMainWindow):
         self.products_table.setHorizontalHeaderItem(4, QTableWidgetItem("Quota"))
         self.products_table.setHorizontalHeaderItem(5, QTableWidgetItem("Availability"))
 
+        self.search_text = QLabel("Search")
+        self.search_entry = QLineEdit()
+        self.search_entry.setPlaceholderText("Search for Products")
+        self.search_button = QPushButton("Search")
+
+        self.all_products = QRadioButton("All")
+        self.available_products = QRadioButton("Available")
+        self.not_available_products = QRadioButton("Not Available")
+        self.list_button = QPushButton("List")
+
     def layouts(self):
         self.main_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
         self.right_top_layout = QHBoxLayout()
         self.right_middle_layout = QHBoxLayout()
-        self.top_group_box = QGroupBox()
-        self.middle_group_box = QGroupBox()
+        self.top_group_box = QGroupBox("Search Box")
+        self.middle_group_box = QGroupBox("List Box")
 
         self.left_layout.addWidget(self.products_table)
-        self.tab1.setLayout(self.left_layout)
+
+        self.right_top_layout.addWidget(self.search_text)
+        self.right_top_layout.addWidget(self.search_entry)
+        self.right_top_layout.addWidget(self.search_button)
+        self.top_group_box.setLayout(self.right_top_layout)
+        self.right_layout.addWidget(self.top_group_box)
+
+        self.right_middle_layout.addWidget(self.all_products)
+        self.right_middle_layout.addWidget(self.available_products)
+        self.right_middle_layout.addWidget(self.not_available_products)
+        self.right_middle_layout.addWidget(self.list_button)
+        self.middle_group_box.setLayout(self.right_middle_layout)
+        self.right_layout.addWidget(self.middle_group_box)
+
+        self.main_layout.addLayout(self.left_layout, 70)
+        self.main_layout.addLayout(self.right_layout, 30)
+        self.tab1.setLayout(self.main_layout)
 
 def main():
     App = QApplication(sys.argv)
