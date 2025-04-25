@@ -48,6 +48,7 @@ class Main(QMainWindow):
         self.tabs.addTab(self.tab3, "Statistics")
 
     def widgets(self):
+        ######################## TAB 1 ########################
         self.products_table = QTableWidget()
         self.products_table.setColumnCount(6)
         self.products_table.setColumnHidden(0, True)
@@ -68,7 +69,21 @@ class Main(QMainWindow):
         self.not_available_products = QRadioButton("Not Available")
         self.list_button = QPushButton("List")
 
+        ######################## TAB 2 ########################
+        self.members_table = QTableWidget()
+        self.members_table.setColumnCount(4)
+        self.members_table.setHorizontalHeaderItem(0, QTableWidgetItem("Member ID"))
+        self.members_table.setHorizontalHeaderItem(1, QTableWidgetItem("Name"))
+        self.members_table.setHorizontalHeaderItem(2, QTableWidgetItem("Surname"))
+        self.members_table.setHorizontalHeaderItem(3, QTableWidgetItem("Phone Number"))
+
+        self.member_search_text = QLabel("Search Member:")
+        self.member_search_entry = QLineEdit()
+        self.member_search_button = QPushButton("Search")
+
+
     def layouts(self):
+        ######################## TAB 1 ########################
         self.main_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
@@ -95,6 +110,24 @@ class Main(QMainWindow):
         self.main_layout.addLayout(self.left_layout, 70)
         self.main_layout.addLayout(self.right_layout, 30)
         self.tab1.setLayout(self.main_layout)
+
+        ######################## TAB 2 ########################
+        self.member_main_layout =  QHBoxLayout()
+        self.member_left_layout = QHBoxLayout()
+        self.member_right_layout = QHBoxLayout()
+        self.member_right_groupbox = QGroupBox("Search for Members")
+        self.member_right_groupbox.setContentsMargins(10, 10, 10, 600)
+
+        self.member_left_layout.addWidget(self.members_table)
+        self.member_right_layout.addWidget(self.member_search_text)
+        self.member_right_layout.addWidget(self.member_search_entry)
+        self.member_right_layout.addWidget(self.member_search_button)
+
+        self.member_right_groupbox.setLayout(self.member_right_layout)
+
+        self.member_main_layout.addLayout(self.member_left_layout, 70)
+        self.member_main_layout.addWidget(self.member_right_groupbox, 30)
+        self.tab2.setLayout(self.member_main_layout)
 
 def main():
     App = QApplication(sys.argv)
