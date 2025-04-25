@@ -45,7 +45,14 @@ class Main(QMainWindow):
         self.tabs.addTab(self.tab2, "Members")
         self.tabs.addTab(self.tab3, "Statistics")
 
-
+    def layouts(self):
+        self.main_layout = QHBoxLayout()
+        self.left_layout = QVBoxLayout()
+        self.right_layout = QVBoxLayout()
+        self.right_top_layout = QHBoxLayout()
+        self.right_middle_layout = QHBoxLayout()
+        self.top_group_box = QGroupBox()
+        self.middle_group_box = QGroupBox()
 
 def main():
     App = QApplication(sys.argv)
