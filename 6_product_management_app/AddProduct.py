@@ -22,3 +22,10 @@ class AddProduct(QWidget):
 
     def UI(self):
         pass
+
+    def layout(self):
+        self.main_layout = QVBoxLayout()
+        self.top_layout = QHBoxLayout()
+        self.bottom_layout = QFormLayout()
+        self.top_frame = QFrame()
+        self.bottom_frame = QFrame()
