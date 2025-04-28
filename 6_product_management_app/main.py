@@ -3,6 +3,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 
+import sqlite3
+
+con = sqlite3.connect("products.db")
+cur = con.cursor()
+
 class Main(QMainWindow):
     def __init__(self):
         super().__init__()
