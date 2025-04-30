@@ -22,12 +22,13 @@ class Main(QMainWindow):
         self.show()
 
     def UI(self):
-        self.toolBar()
+        self.toolbar()
         self.tabWidgets()
         self.widgets()
         self.layouts()
+        self.display_products()
 
-    def toolBar(self):
+    def toolbar(self):
         self.tb = self.addToolBar("Tool Bar")
         self.tb.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
@@ -144,6 +145,20 @@ class Main(QMainWindow):
 
     def func_add_member(self):
         self.new_member = AddMember.AddMember()
+
+    def display_products(self):
+        self.products_table.setFont(QFont("Tahoma", 16))
+        for i in reversed(range(self.products_table.rowCount())):
+            self.products_table.removeRow(i)
+
+        query = cur.execute("SELECT id, name, manufacturer, price, quota, availability FROM products")
+        for row_data in query:
+            row_number = self.products_table.rowCount()
+            self.products_table.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.products_table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+        self.products_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 def main():
     App = QApplication(sys.argv)
