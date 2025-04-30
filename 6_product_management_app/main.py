@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
+
 import AddProduct
+import AddMember
 
 import sqlite3
 
@@ -37,6 +39,7 @@ class Main(QMainWindow):
         self.add_member = QAction(QIcon('icons/user.png'), "Add Member", self)
         self.tb.addAction(self.add_member)
         self.tb.addSeparator()
+        self.add_member.triggered.connect(self.func_add_member)
 
         self.sell_product = QAction(QIcon('icons/sell.png'), "Sell Product", self)
         self.tb.addAction(self.sell_product)
@@ -138,6 +141,9 @@ class Main(QMainWindow):
 
     def func_add_product(self):
         self.new_product = AddProduct.AddProduct()
+
+    def func_add_member(self):
+        self.new_member = AddMember.AddMember()
 
 def main():
     App = QApplication(sys.argv)
