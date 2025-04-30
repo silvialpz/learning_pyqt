@@ -27,6 +27,7 @@ class Main(QMainWindow):
         self.widgets()
         self.layouts()
         self.display_products()
+        self.display_members()
 
     def toolbar(self):
         self.tb = self.addToolBar("Tool Bar")
@@ -159,6 +160,22 @@ class Main(QMainWindow):
                 self.products_table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
 
         self.products_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+    def display_members(self):
+        self.members_table.setFont(QFont("Tahoma", 16))
+
+        for i in reversed(range(self.members_table.rowCount())):
+            self.members_table.removeRow(i)
+
+        query = cur.execute("SELECT * FROM members")
+        for row_data in query:
+            row_number = self.members_table.rowCount()
+            self.members_table.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.members_table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+        self.members_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
 
 def main():
     App = QApplication(sys.argv)
