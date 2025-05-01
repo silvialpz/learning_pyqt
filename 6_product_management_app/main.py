@@ -70,6 +70,9 @@ class Main(QMainWindow):
         self.products_table.setHorizontalHeaderItem(3, QTableWidgetItem("Price"))
         self.products_table.setHorizontalHeaderItem(4, QTableWidgetItem("Quota"))
         self.products_table.setHorizontalHeaderItem(5, QTableWidgetItem("Availability"))
+        self.products_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.products_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
+        self.products_table.doubleClicked.connect(self.selected_product)
 
         self.search_text = QLabel("Search")
         self.search_entry = QLineEdit()
@@ -175,6 +178,27 @@ class Main(QMainWindow):
                 self.members_table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
 
         self.members_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+    def selected_product(self):
+        list_product = []
+        for i in range(0, 6):
+            list_product.append(self.products_table.item(self.products_table.currentRow(), i).text())
+
+        self.display = DisplayProduct()
+
+class DisplayProduct(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Product Details")
+        self.setWindowIcon(QIcon("icons/icon.ico"))
+        self.setGeometry(450, 150, 350, 600)
+        self.setFixedSize(self.size())
+
+        self.UI()
+        self.show()
+
+    def UI(self):
+        pass
 
 
 def main():
