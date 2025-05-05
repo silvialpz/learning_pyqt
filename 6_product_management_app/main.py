@@ -180,25 +180,42 @@ class Main(QMainWindow):
         self.members_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
     def selected_product(self):
-        list_product = []
-        for i in range(0, 6):
-            list_product.append(self.products_table.item(self.products_table.currentRow(), i).text())
-
-        self.display = DisplayProduct()
+        product_id = self.products_table.item(self.products_table.currentRow(), 0).text()
+        self.display = DisplayProduct(product_id)
 
 class DisplayProduct(QWidget):
-    def __init__(self):
+    def __init__(self, product_id):
         super().__init__()
         self.setWindowTitle("Product Details")
         self.setWindowIcon(QIcon("icons/icon.ico"))
         self.setGeometry(450, 150, 350, 600)
         self.setFixedSize(self.size())
+        self.product_id = product_id
 
         self.UI()
         self.show()
 
     def UI(self):
-        pass
+        self.product_details()
+
+    def product_details(self):
+        query = ("SELECT * FROM products WHERE id=?")
+        product = cur.execute(query, (self.product_id,)).fetchone()
+
+        self.name = product[1]
+        self.manufacturer = product[2]
+        self.price = product[3]
+        self.quota = product[4]
+        self.product_img = product[5]
+        self.status = product[6]
+
+    def layouts(self):
+        self.main_layout = QVBoxLayout()
+        self.top_layout = QVBoxLayout()
+        self.bottom_layout = QFormLayout()
+        self.top_frame = QFrame()
+        self.bottom_frame = QFrame()
+
 
 
 def main():
