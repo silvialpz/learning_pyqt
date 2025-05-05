@@ -76,6 +76,8 @@ class AddProduct(QWidget):
             img = Image.open(file_name)
             img = img.resize(size)
             img.save('img/{0}'.format(self.default_img))
+        else:
+            self.default_img = "sell.png"
 
     def add_product(self):
         name = self.name_entry.text()

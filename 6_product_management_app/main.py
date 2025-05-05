@@ -1,7 +1,8 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
+from PIL import Image
 
 import AddProduct
 import AddMember
@@ -10,6 +11,7 @@ import sqlite3
 
 con = sqlite3.connect("products.db")
 cur = con.cursor()
+
 
 class Main(QMainWindow):
     def __init__(self):
@@ -96,7 +98,6 @@ class Main(QMainWindow):
         self.member_search_entry = QLineEdit()
         self.member_search_button = QPushButton("Search")
 
-
     def layouts(self):
         ######################## TAB 1 ########################
         self.main_layout = QHBoxLayout()
@@ -127,7 +128,7 @@ class Main(QMainWindow):
         self.tab1.setLayout(self.main_layout)
 
         ######################## TAB 2 ########################
-        self.member_main_layout =  QHBoxLayout()
+        self.member_main_layout = QHBoxLayout()
         self.member_left_layout = QHBoxLayout()
         self.member_right_layout = QHBoxLayout()
         self.member_right_groupbox = QGroupBox("Search for Members")
@@ -183,6 +184,7 @@ class Main(QMainWindow):
         product_id = self.products_table.item(self.products_table.currentRow(), 0).text()
         self.display = DisplayProduct(product_id)
 
+
 class DisplayProduct(QWidget):
     def __init__(self, product_id):
         super().__init__()
@@ -197,6 +199,8 @@ class DisplayProduct(QWidget):
 
     def UI(self):
         self.product_details()
+        self.widgets()
+        self.layouts()
 
     def product_details(self):
         query = ("SELECT * FROM products WHERE id=?")
@@ -206,8 +210,30 @@ class DisplayProduct(QWidget):
         self.manufacturer = product[2]
         self.price = product[3]
         self.quota = product[4]
-        self.product_img = product[5]
+        self.product_img = "img/{}".format(product[5])
         self.status = product[6]
+
+    def widgets(self):
+        self.img = QLabel()
+        self.img.setPixmap(QPixmap(self.product_img))
+        self.img.setAlignment(Qt.AlignCenter)
+        self.title_text = QLabel("Update Product")
+        self.title_text.setAlignment(Qt.AlignCenter)
+
+        self.name_entry = QLineEdit()
+        self.name_entry.setText(self.name)
+        self.manufacturer_entry = QLineEdit()
+        self.manufacturer_entry.setText(self.manufacturer)
+        self.price_entry = QLineEdit()
+        self.price_entry.setText(str(self.price))
+        self.quota_entry = QLineEdit()
+        self.quota_entry.setText(str(self.quota))
+        self.availability_combo = QComboBox()
+        self.availability_combo.addItems(["Available", "Unavailable"])
+        self.upload_btn = QPushButton("Upload")
+        self.upload_btn.clicked.connect(self.upload_img)
+        self.delete_btn = QPushButton("Delete")
+        self.update_btn = QPushButton("Update")
 
     def layouts(self):
         self.main_layout = QVBoxLayout()
@@ -216,12 +242,40 @@ class DisplayProduct(QWidget):
         self.top_frame = QFrame()
         self.bottom_frame = QFrame()
 
+        self.top_layout.addWidget(self.title_text)
+        self.top_layout.addWidget(self.img)
+        self.top_frame.setLayout(self.top_layout)
+
+        self.bottom_layout.addRow(QLabel("Name: "), self.name_entry)
+        self.bottom_layout.addRow(QLabel("Manufacturer: "), self.manufacturer_entry)
+        self.bottom_layout.addRow(QLabel("Price: "), self.price_entry)
+        self.bottom_layout.addRow(QLabel("Quota: "), self.quota_entry)
+        self.bottom_layout.addRow(QLabel("Status: "), self.availability_combo)
+        self.bottom_layout.addRow(QLabel("Image: "), self.upload_btn)
+        self.bottom_layout.addRow(QLabel(""), self.delete_btn)
+        self.bottom_layout.addRow(QLabel(""), self.update_btn)
+        self.bottom_frame.setLayout(self.bottom_layout)
+
+        self.main_layout.addWidget(self.top_frame)
+        self.main_layout.addWidget(self.bottom_frame)
+
+        self.setLayout(self.main_layout)
+
+    def upload_img(self):
+        size = (256, 256)
+        file_name, ok = QFileDialog.getOpenFileName(self, "Upload Image", "", "Image Files (*.jpg *.png)")
+        if ok:
+            self.default_img = os.path.basename(file_name)
+            img = Image.open(file_name)
+            img = img.resize(size)
+            img.save('img/{0}'.format(self.default_img))
 
 
 def main():
     App = QApplication(sys.argv)
     window = Main()
     sys.exit(App.exec_())
+
 
 if __name__ == '__main__':
     main()
