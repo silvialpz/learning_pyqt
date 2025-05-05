@@ -233,6 +233,7 @@ class DisplayProduct(QWidget):
         self.upload_btn = QPushButton("Upload")
         self.upload_btn.clicked.connect(self.upload_img)
         self.delete_btn = QPushButton("Delete")
+        self.delete_btn.clicked.connect(self.delete_product)
         self.update_btn = QPushButton("Update")
         self.update_btn.clicked.connect(self.update_product)
 
@@ -289,6 +290,21 @@ class DisplayProduct(QWidget):
                 QMessageBox.information(self, "Info", "Product has not been updated")
         else:
             QMessageBox.information(self, "Info", "Fields cannot be empty")
+
+    def delete_product(self):
+        mbox = QMessageBox.warning(self, "Warning", "Are you sure you want to delete this product?",
+                                   QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if mbox == QMessageBox.Yes:
+            try:
+                cur.execute("DELETE FROM products WHERE id=?", (self.product_id,))
+                con.commit()
+                QMessageBox.information(self, "Info", "Product has been deleted")
+                con.close()
+                self.close()
+            except:
+                QMessageBox.information(self, "Info", "Product has not been deleted")
+
 
 def main():
     App = QApplication(sys.argv)
