@@ -88,7 +88,6 @@ class AddProduct(QWidget):
         if name and manufacturer and price and quota is not None:
             try:
                 query = "INSERT INTO 'products' (name, manufacturer, price, quota, img) VALUES(?, ?, ?, ?, ?)"
-                print("hey")
                 cur.execute(query, (name, manufacturer, price, quota, self.default_img))
                 con.commit()
                 QMessageBox.information(self, "Info", "Product has been added")

@@ -234,6 +234,7 @@ class DisplayProduct(QWidget):
         self.upload_btn.clicked.connect(self.upload_img)
         self.delete_btn = QPushButton("Delete")
         self.update_btn = QPushButton("Update")
+        self.update_btn.clicked.connect(self.update_product)
 
     def layouts(self):
         self.main_layout = QVBoxLayout()
@@ -265,11 +266,29 @@ class DisplayProduct(QWidget):
         size = (256, 256)
         file_name, ok = QFileDialog.getOpenFileName(self, "Upload Image", "", "Image Files (*.jpg *.png)")
         if ok:
-            self.default_img = os.path.basename(file_name)
+            self.product_img = os.path.basename(file_name)
             img = Image.open(file_name)
             img = img.resize(size)
-            img.save('img/{0}'.format(self.default_img))
+            img.save('img/{0}'.format(self.product_img))
 
+    def update_product(self):
+        name = self.name_entry.text()
+        manufacturer = self.manufacturer_entry.text()
+        price = int(self.price_entry.text())
+        quota = int(self.quota_entry.text())
+        status = self.availability_combo.currentText()
+        default_img = self.product_img
+
+        if name and manufacturer and price and quota is not None:
+            try:
+                query = "UPDATE products SET name=?, manufacturer=?, price=?, quota=?, img=?, availability=? WHERE id=?"
+                cur.execute(query, (name, manufacturer, price, quota, default_img, status, self.product_id))
+                con.commit()
+                QMessageBox.information(self, "Info", "Product has been updated")
+            except:
+                QMessageBox.information(self, "Info", "Product has not been updated")
+        else:
+            QMessageBox.information(self, "Info", "Fields cannot be empty")
 
 def main():
     App = QApplication(sys.argv)
