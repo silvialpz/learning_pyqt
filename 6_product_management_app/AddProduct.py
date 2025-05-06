@@ -91,7 +91,6 @@ class AddProduct(QWidget):
                 cur.execute(query, (name, manufacturer, price, quota, self.default_img))
                 con.commit()
                 QMessageBox.information(self, "Info", "Product has been added")
-                con.close()
                 self.name_entry.setText("")
                 self.manufacturer_entry.setText("")
                 self.price_entry.setText("")

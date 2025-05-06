@@ -93,6 +93,10 @@ class Main(QMainWindow):
         self.members_table.setHorizontalHeaderItem(1, QTableWidgetItem("Name"))
         self.members_table.setHorizontalHeaderItem(2, QTableWidgetItem("Surname"))
         self.members_table.setHorizontalHeaderItem(3, QTableWidgetItem("Phone Number"))
+        self.members_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.members_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
+        self.members_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
+        self.members_table.doubleClicked.connect(self.selected_member )
 
         self.member_search_text = QLabel("Search Member:")
         self.member_search_entry = QLineEdit()
@@ -183,6 +187,25 @@ class Main(QMainWindow):
     def selected_product(self):
         product_id = self.products_table.item(self.products_table.currentRow(), 0).text()
         self.display = DisplayProduct(product_id)
+
+    def selected_member(self):
+        member_id = self.members_table.item(self.members_table.currentRow(), 0).text()
+        self.display = DisplayMember(member_id)
+
+class DisplayMember(QWidget):
+    def __init__(self, member_id):
+        super().__init__()
+        self.setWindowTitle("Member Details")
+        self.setWindowIcon(QIcon("icons/icon.ico"))
+        self.setGeometry(450, 150, 350, 600)
+        self.setFixedSize(self.size())
+        self.member_id = member_id
+
+        self.UI()
+        self.show()
+
+    def UI(self):
+        pass
 
 
 class DisplayProduct(QWidget):
@@ -300,7 +323,6 @@ class DisplayProduct(QWidget):
                 cur.execute("DELETE FROM products WHERE id=?", (self.product_id,))
                 con.commit()
                 QMessageBox.information(self, "Info", "Product has been deleted")
-                con.close()
                 self.close()
             except:
                 QMessageBox.information(self, "Info", "Product has not been deleted")
