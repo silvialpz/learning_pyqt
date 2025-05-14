@@ -96,7 +96,7 @@ class Main(QMainWindow):
         self.members_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.members_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
         self.members_table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
-        self.members_table.doubleClicked.connect(self.selected_member )
+        self.members_table.doubleClicked.connect(self.selected_member)
 
         self.member_search_text = QLabel("Search Member:")
         self.member_search_entry = QLineEdit()
@@ -151,9 +151,11 @@ class Main(QMainWindow):
 
     def func_add_product(self):
         self.new_product = AddProduct.AddProduct()
+        self.display_products()
 
     def func_add_member(self):
         self.new_member = AddMember.AddMember()
+        self.display_members()
 
     def display_products(self):
         self.products_table.setFont(QFont("Tahoma", 16))
@@ -205,7 +207,88 @@ class DisplayMember(QWidget):
         self.show()
 
     def UI(self):
-        pass
+        self.member_details()
+        self.widgets()
+        self.layouts()
+
+    def member_details(self):
+        query = ("SELECT * FROM members WHERE id=?")
+        member = cur.execute(query, (self.member_id,)).fetchone()
+
+        self.name = member[1]
+        self.surname = member[2]
+        self.phone = member[3]
+
+    def widgets(self):
+        self.img = QLabel()
+        self.img.setPixmap(QPixmap("icons/user.png"))
+        self.img.setAlignment(Qt.AlignCenter)
+        self.title_text = QLabel("Update Member")
+        self.title_text.setAlignment(Qt.AlignCenter)
+
+        self.name_entry = QLineEdit()
+        self.name_entry.setText(self.name)
+        self.surname_entry = QLineEdit()
+        self.surname_entry.setText(self.surname)
+        self.phone_entry = QLineEdit()
+        self.phone_entry.setText(self.phone)
+
+        self.delete_btn = QPushButton("Delete")
+        self.delete_btn.clicked.connect(self.delete_member)
+        self.update_btn = QPushButton("Update")
+        self.update_btn.clicked.connect(self.update_member)
+
+    def layouts(self):
+        self.main_layout = QVBoxLayout()
+        self.top_layout = QVBoxLayout()
+        self.bottom_layout = QFormLayout()
+        self.top_frame = QFrame()
+        self.bottom_frame = QFrame()
+
+        self.top_layout.addWidget(self.title_text)
+        self.top_layout.addWidget(self.img)
+        self.top_frame.setLayout(self.top_layout)
+
+        self.bottom_layout.addRow(QLabel("Name: "), self.name_entry)
+        self.bottom_layout.addRow(QLabel("Surname: "), self.surname_entry)
+        self.bottom_layout.addRow(QLabel("Phone: "), self.phone_entry)
+        self.bottom_layout.addRow(QLabel(""), self.delete_btn)
+        self.bottom_layout.addRow(QLabel(""), self.update_btn)
+        self.bottom_frame.setLayout(self.bottom_layout)
+
+        self.main_layout.addWidget(self.top_frame)
+        self.main_layout.addWidget(self.bottom_frame)
+
+        self.setLayout(self.main_layout)
+
+    def delete_member(self):
+        mbox = QMessageBox.warning(self, "Warning", "Are you sure you want to delete this member?",
+                                   QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if mbox == QMessageBox.Yes:
+            try:
+                cur.execute("DELETE FROM members WHERE id=?", (self.member_id,))
+                con.commit()
+                QMessageBox.information(self, "Info", "Member has been deleted")
+                self.close()
+            except:
+                QMessageBox.information(self, "Info", "Member has not been deleted")
+
+    def update_member(self):
+        name = self.name_entry.text()
+        surname = self.surname_entry.text()
+        phone = int(self.phone_entry.text())
+
+        if name and surname and phone is not None:
+            try:
+                query = "UPDATE members SET name=?, surname=?, phone=? WHERE id=?"
+                cur.execute(query, (name, surname, phone, self.member_id))
+                con.commit()
+                QMessageBox.information(self, "Info", "Member has been updated")
+            except:
+                QMessageBox.information(self, "Info", "Member has not been updated")
+        else:
+            QMessageBox.information(self, "Info", "Fields cannot be empty")
 
 
 class DisplayProduct(QWidget):

@@ -59,7 +59,7 @@ class AddProduct(QWidget):
         self.bottom_layout.addRow(QLabel("Manufacturer: "), self.manufacturer_entry)
         self.bottom_layout.addRow(QLabel("Price: "), self.price_entry)
         self.bottom_layout.addRow(QLabel("Quota: "), self.quota_entry)
-        self.bottom_layout.addRow(QLabel("Upload: "), self.upload_btn)
+        self.bottom_layout.addRow(QLabel("Image: "), self.upload_btn)
         self.bottom_layout.addRow(QLabel(""), self.submit_btn)
         self.bottom_frame.setLayout(self.bottom_layout)
 

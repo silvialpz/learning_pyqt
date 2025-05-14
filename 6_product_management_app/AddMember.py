@@ -77,6 +77,7 @@ class AddMember(QWidget):
                 self.name_entry.setText("")
                 self.surname_entry.setText("")
                 self.phone_entry.setText("")
+                self.close()
             except:
                 QMessageBox.information(self, "Info", "Member has not been added")
         else:
