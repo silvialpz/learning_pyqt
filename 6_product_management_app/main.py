@@ -28,8 +28,8 @@ class Main(QMainWindow):
         self.tabWidgets()
         self.widgets()
         self.layouts()
-        self.display_products()
-        self.display_members()
+        self.display_products("SELECT id, name, manufacturer, price, quota, availability FROM products")
+        self.display_members("SELECT * FROM members")
 
     def toolbar(self):
         self.tb = self.addToolBar("Tool Bar")
@@ -86,6 +86,7 @@ class Main(QMainWindow):
         self.available_products = QRadioButton("Available")
         self.not_available_products = QRadioButton("Not Available")
         self.list_button = QPushButton("List")
+        self.list_button.clicked.connect(self.list_products)
 
         ######################## TAB 2 ########################
         self.members_table = QTableWidget()
@@ -153,18 +154,17 @@ class Main(QMainWindow):
 
     def func_add_product(self):
         self.new_product = AddProduct.AddProduct()
-        self.display_products()
 
     def func_add_member(self):
         self.new_member = AddMember.AddMember()
         self.display_members()
 
-    def display_products(self):
+    def display_products(self, query):
         self.products_table.setFont(QFont("Tahoma", 16))
         for i in reversed(range(self.products_table.rowCount())):
             self.products_table.removeRow(i)
 
-        query = cur.execute("SELECT id, name, manufacturer, price, quota, availability FROM products")
+        query = cur.execute(query)
         for row_data in query:
             row_number = self.products_table.rowCount()
             self.products_table.insertRow(row_number)
@@ -173,13 +173,13 @@ class Main(QMainWindow):
 
         self.products_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-    def display_members(self):
+    def display_members(self, query):
         self.members_table.setFont(QFont("Tahoma", 16))
 
         for i in reversed(range(self.members_table.rowCount())):
             self.members_table.removeRow(i)
 
-        query = cur.execute("SELECT * FROM members")
+        query = cur.execute(query)
         for row_data in query:
             row_number = self.members_table.rowCount()
             self.members_table.insertRow(row_number)
@@ -203,22 +203,8 @@ class Main(QMainWindow):
             QMessageBox.information(self, "Warning", "Search entry cannot be empty")
         else:
             self.search_entry.setText("")
-
-            query = ("SELECT id, name, manufacturer, price, quota, availability FROM products WHERE name LIKE ? or manufacturer LIKE ?")
-            results = cur.execute(query, ('%'+value + '%', '%'+value + '%')).fetchall()
-            print(results)
-
-            if results == []:
-                QMessageBox.information(self, "Info", "There is no such a product or manufacturer")
-            else:
-                for i in reversed(range(self.products_table.rowCount())):
-                    self.products_table.removeRow(i)
-
-                for row_data in results:
-                    row_number = self.products_table.rowCount()
-                    self.products_table.insertRow(row_number)
-                    for column_number, data in enumerate(row_data):
-                        self.products_table.setItem(row_number, column_number, QTableWidgetItem(data))
+            query = "SELECT id, name, manufacturer, price, quota, availability FROM products WHERE name LIKE '{}' or manufacturer LIKE '{}'".format('%'+value + '%', '%'+value + '%')
+            self.display_products(query)
 
     def search_members(self):
         value = self.member_search_entry.text()
@@ -227,22 +213,16 @@ class Main(QMainWindow):
             QMessageBox.information(self, "Warning", "Search entry cannot be empty")
         else:
             self.search_entry.setText("")
+            query = "SELECT id, name, surname, phone FROM members WHERE name LIKE '{}' or surname LIKE '{}'".format('%'+value + '%', '%'+value + '%')
+            self.display_members(query)
 
-            query = ("SELECT id, name, surname, phone FROM members WHERE name LIKE ? or surname LIKE ?")
-            results = cur.execute(query, ('%'+value + '%', '%'+value + '%')).fetchall()
-            print(results)
-
-            if results == []:
-                QMessageBox.information(self, "Info", "There is no such a member")
-            else:
-                for i in reversed(range(self.members_table.rowCount())):
-                    self.members_table.removeRow(i)
-
-                for row_data in results:
-                    row_number = self.members_table.rowCount()
-                    self.members_table.insertRow(row_number)
-                    for column_number, data in enumerate(row_data):
-                        self.members_table.setItem(row_number, column_number, QTableWidgetItem(data))
+    def list_products(self):
+        if self.all_products.isChecked():
+            self.display_products("SELECT id, name, manufacturer, price, quota, availability FROM products")
+        elif self.available_products.isChecked():
+            self.display_products("SELECT id, name, manufacturer, price, quota, availability FROM products WHERE availability='Available'")
+        elif self.not_available_products.isChecked():
+            self.display_products("SELECT id, name, manufacturer, price, quota, availability FROM products WHERE availability='Unavailable'")
 
 class DisplayMember(QWidget):
     def __init__(self, member_id):
