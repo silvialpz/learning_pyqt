@@ -1,6 +1,7 @@
 import os.path
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt
 from PIL import Image
 
 import sqlite3
@@ -27,7 +28,9 @@ class AddProduct(QWidget):
     def widgets(self):
         self.img =  QLabel()
         self.img.setPixmap(QPixmap('icons/addproduct.png'))
+        self.img.setAlignment(Qt.AlignCenter)
         self.title_text = QLabel("Add Product")
+        self.title_text.setAlignment(Qt.AlignCenter)
 
         self.name_entry = QLineEdit()
         self.name_entry.setPlaceholderText("Enter name of product")
@@ -46,7 +49,7 @@ class AddProduct(QWidget):
 
     def layouts(self):
         self.main_layout = QVBoxLayout()
-        self.top_layout = QHBoxLayout()
+        self.top_layout = QVBoxLayout()
         self.bottom_layout = QFormLayout()
         self.top_frame = QFrame()
         self.bottom_frame = QFrame()
