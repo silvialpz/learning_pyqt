@@ -17,6 +17,13 @@ class SellProduct(QWidget):
         self.default_img = 'icons/sell.png'
         self.setGeometry(450, 150, 350, 550)
         self.setFixedSize(self.size())
+
+        product_query = "SELECT id, name, quota FROM products WHERE availability = 'Available'"
+        self.products = cur.execute(product_query).fetchall()
+
+        member_query = "SELECT id, name, surname FROM members"
+        self.members = cur.execute(member_query).fetchall()
+
         self.UI()
 
         self.show()
@@ -32,12 +39,20 @@ class SellProduct(QWidget):
         self.title_text = QLabel("Sell Product")
         self.title_text.setAlignment(Qt.AlignCenter)
 
-
         self.product_combo_box = QComboBox()
+        self.product_combo_box.currentIndexChanged.connect(self.set_quantity_combo_box)
         self.member_combo_box = QComboBox()
         self.quantity_combo_box = QComboBox()
 
         self.submit_btn = QPushButton("Submit")
+
+        for (id, name, quota) in self.products:
+            self.product_combo_box.addItem(name, id)
+
+        for (id, name, surname) in self.members:
+            self.member_combo_box.addItem("{} {}".format(name, surname), id)
+
+        self.set_quantity_combo_box()
 
     def layouts(self):
         self.main_layout = QVBoxLayout()
@@ -59,3 +74,9 @@ class SellProduct(QWidget):
         self.main_layout.addWidget(self.top_frame)
         self.main_layout.addWidget(self.bottom_frame)
         self.setLayout(self.main_layout)
+
+    def set_quantity_combo_box(self):
+        self.quantity_combo_box.clear()
+        product_quantity = self.products[self.product_combo_box.currentIndex()][2]
+        for i in range(1, product_quantity+1):
+            self.quantity_combo_box.addItem(str(i))
