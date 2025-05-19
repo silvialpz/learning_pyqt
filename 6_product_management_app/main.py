@@ -102,6 +102,7 @@ class Main(QMainWindow):
         self.member_search_text = QLabel("Search Member:")
         self.member_search_entry = QLineEdit()
         self.member_search_button = QPushButton("Search")
+        self.member_search_button.clicked.connect(self.search_members)
 
     def layouts(self):
         ######################## TAB 1 ########################
@@ -218,6 +219,30 @@ class Main(QMainWindow):
                     self.products_table.insertRow(row_number)
                     for column_number, data in enumerate(row_data):
                         self.products_table.setItem(row_number, column_number, QTableWidgetItem(data))
+
+    def search_members(self):
+        value = self.member_search_entry.text()
+
+        if value == "":
+            QMessageBox.information(self, "Warning", "Search entry cannot be empty")
+        else:
+            self.search_entry.setText("")
+
+            query = ("SELECT id, name, surname, phone FROM members WHERE name LIKE ? or surname LIKE ?")
+            results = cur.execute(query, ('%'+value + '%', '%'+value + '%')).fetchall()
+            print(results)
+
+            if results == []:
+                QMessageBox.information(self, "Info", "There is no such a member")
+            else:
+                for i in reversed(range(self.members_table.rowCount())):
+                    self.members_table.removeRow(i)
+
+                for row_data in results:
+                    row_number = self.members_table.rowCount()
+                    self.members_table.insertRow(row_number)
+                    for column_number, data in enumerate(row_data):
+                        self.members_table.setItem(row_number, column_number, QTableWidgetItem(data))
 
 class DisplayMember(QWidget):
     def __init__(self, member_id):
