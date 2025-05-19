@@ -6,6 +6,7 @@ from PIL import Image
 
 import AddProduct
 import AddMember
+import SellProduct
 
 import sqlite3
 
@@ -48,6 +49,7 @@ class Main(QMainWindow):
         self.sell_product = QAction(QIcon('icons/sell.png'), "Sell Product", self)
         self.tb.addAction(self.sell_product)
         self.tb.addSeparator()
+        self.sell_product.triggered.connect(self.func_sell_product)
 
     def tabWidgets(self):
         self.tabs = QTabWidget()
@@ -157,7 +159,9 @@ class Main(QMainWindow):
 
     def func_add_member(self):
         self.new_member = AddMember.AddMember()
-        self.display_members()
+
+    def func_sell_product(self):
+        self.sell = SellProduct.SellProduct()
 
     def display_products(self, query):
         self.products_table.setFont(QFont("Tahoma", 16))
