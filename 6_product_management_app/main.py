@@ -26,11 +26,12 @@ class Main(QMainWindow):
 
     def UI(self):
         self.toolbar()
-        self.tabWidgets()
         self.widgets()
+        self.tabWidgets()
         self.layouts()
-        self.display_products("SELECT id, name, manufacturer, price, quota, availability FROM products")
-        self.display_members("SELECT * FROM members")
+        self.display_products()
+        self.display_members()
+        self.display_statistics()
 
     def toolbar(self):
         self.tb = self.addToolBar("Tool Bar")
@@ -53,6 +54,7 @@ class Main(QMainWindow):
 
     def tabWidgets(self):
         self.tabs = QTabWidget()
+        self.tabs.currentChanged.connect(self.update_tabs)
         self.setCentralWidget(self.tabs)
 
         self.tab1 = QWidget()
@@ -62,6 +64,11 @@ class Main(QMainWindow):
         self.tabs.addTab(self.tab1, "Products")
         self.tabs.addTab(self.tab2, "Members")
         self.tabs.addTab(self.tab3, "Statistics")
+
+    def update_tabs(self):
+        self.display_members()
+        self.display_products()
+        self.display_statistics()
 
     def widgets(self):
         ######################## TAB 1 ########################
@@ -106,6 +113,14 @@ class Main(QMainWindow):
         self.member_search_entry = QLineEdit()
         self.member_search_button = QPushButton("Search")
         self.member_search_button.clicked.connect(self.search_members)
+
+        ######################## TAB 3 ########################
+        self.statistics_title = QLabel("Statistics")
+
+        self.total_products_text = QLabel("")
+        self.total_members_text = QLabel("")
+        self.sold_products = QLabel("")
+        self.total_amount = QLabel("")
 
     def layouts(self):
         ######################## TAB 1 ########################
@@ -154,6 +169,16 @@ class Main(QMainWindow):
         self.member_main_layout.addWidget(self.member_right_groupbox, 30)
         self.tab2.setLayout(self.member_main_layout)
 
+        ######################## TAB 3 ########################
+        self.statistics_form = QFormLayout()
+        self.tab3.setLayout(self.statistics_form)
+
+        self.statistics_form.addRow(self.statistics_title, QLabel(""))
+        self.statistics_form.addRow(QLabel("Total Products: "), self.total_products_text)
+        self.statistics_form.addRow(QLabel("Total Members: "), self.total_members_text)
+        self.statistics_form.addRow(QLabel("Sold Products: "), self.sold_products)
+        self.statistics_form.addRow(QLabel("Total Amount: "), self.total_amount)
+
     def func_add_product(self):
         self.new_product = AddProduct.AddProduct()
 
@@ -163,7 +188,10 @@ class Main(QMainWindow):
     def func_sell_product(self):
         self.sell = SellProduct.SellProduct()
 
-    def display_products(self, query):
+    def display_products(self, query=None):
+        if query is None:
+            query = "SELECT id, name, manufacturer, price, quota, availability FROM products"
+
         self.products_table.setFont(QFont("Tahoma", 16))
         for i in reversed(range(self.products_table.rowCount())):
             self.products_table.removeRow(i)
@@ -177,7 +205,9 @@ class Main(QMainWindow):
 
         self.products_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-    def display_members(self, query):
+    def display_members(self, query=None):
+        if query is None:
+            query = "SELECT * FROM members"
         self.members_table.setFont(QFont("Tahoma", 16))
 
         for i in reversed(range(self.members_table.rowCount())):
@@ -191,6 +221,22 @@ class Main(QMainWindow):
                 self.members_table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
 
         self.members_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+    def display_statistics(self):
+        self.total_products_text.setText(str(self.products_table.rowCount()))
+        self.total_members_text.setText(str(self.members_table.rowCount()))
+
+        sales_query = "SELECT quantity, amount FROM 'sellings'"
+        sale_data = cur.execute(sales_query).fetchall()
+
+        total_sold_products = 0
+        total_amount = 0
+        for quantity, amount in sale_data:
+            total_sold_products += quantity
+            total_amount += amount
+
+        self.sold_products.setText(str(total_sold_products))
+        self.total_amount.setText("$ {}".format(total_amount))
 
     def selected_product(self):
         product_id = self.products_table.item(self.products_table.currentRow(), 0).text()
